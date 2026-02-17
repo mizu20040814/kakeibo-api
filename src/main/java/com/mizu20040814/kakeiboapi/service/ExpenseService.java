@@ -1,0 +1,35 @@
+package com.mizu20040814.kakeiboapi.service;
+
+import com.mizu20040814.kakeiboapi.entity.Expense;
+import com.mizu20040814.kakeiboapi.repository.ExpenseRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ExpenseService {
+
+    private final ExpenseRepository expenseRepository;
+
+    public ExpenseService(ExpenseRepository expenseRepository){
+        this.expenseRepository = expenseRepository;
+    }
+
+    public List<Expense> findAll(){
+        return expenseRepository.findAll();
+    }
+
+    public Expense create(Expense expense){
+        if(expense.getAmount() == null || expense.getAmount() <= 0){
+            throw new IllegalArgumentException("金額は1円以上で入力してください");
+        }
+        if (expense.getCategory() == null || expense.getCategory().isBlank()){
+            throw new IllegalArgumentException("カテゴリは必須です");
+        }
+        if(expense.getDate() == null){
+            throw new IllegalArgumentException("日付は必須です");
+        }
+        return expenseRepository.save(expense);
+    }
+
+}
