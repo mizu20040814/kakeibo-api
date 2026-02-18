@@ -1,5 +1,6 @@
 package com.mizu20040814.kakeiboapi.service;
 
+import com.mizu20040814.kakeiboapi.dto.ExpenseRequest;
 import com.mizu20040814.kakeiboapi.entity.Expense;
 import com.mizu20040814.kakeiboapi.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
@@ -19,38 +20,22 @@ public class ExpenseService {
         return expenseRepository.findAll();
     }
 
-    public Expense create(Expense expense){
-        if(expense.getAmount() == null || expense.getAmount() <= 0){
-            throw new IllegalArgumentException("金額は1円以上で入力してください");
-        }
-        if (expense.getCategory() == null || expense.getCategory().isBlank()){
-            throw new IllegalArgumentException("カテゴリは必須です");
-        }
-        if(expense.getDate() == null){
-            throw new IllegalArgumentException("日付は必須です");
-        }
+    public Expense create(ExpenseRequest request) {
+        Expense expense = new Expense();
+        expense.setDate(request.getDate());
+        expense.setAmount(request.getAmount());
+        expense.setCategory(request.getCategory());
+        expense.setMemo(request.getMemo());
         return expenseRepository.save(expense);
     }
 
-    public Expense update(Long id,Expense expense){
+    public Expense update(Long id, ExpenseRequest request) {
         Expense existing = expenseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("指定されたIDの支出が見つかりません: " + id));
-
-        if(expense.getAmount() == null || expense.getAmount() <= 0){
-            throw new IllegalArgumentException("金額は1円以上で入力してください");
-        }
-        if (expense.getCategory() == null || expense.getCategory().isBlank()){
-            throw new IllegalArgumentException("カテゴリは必須です");
-        }
-        if(expense.getDate() == null){
-            throw new IllegalArgumentException("日付は必須です");
-        }
-
-        existing.setDate(expense.getDate());
-        existing.setAmount(expense.getAmount());
-        existing.setMemo(expense.getMemo());
-        existing.setCategory(expense.getCategory());
-
+        existing.setDate(request.getDate());
+        existing.setAmount(request.getAmount());
+        existing.setCategory(request.getCategory());
+        existing.setMemo(request.getMemo());
         return expenseRepository.save(existing);
     }
 
