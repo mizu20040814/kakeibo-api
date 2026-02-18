@@ -21,6 +21,16 @@ public class ExpenseController {
         return expenseService.findAll();
     }
 
+    @GetMapping("/category/{category}")
+    public List<Expense> getByCategory(@PathVariable String category) {
+        return expenseService.findByCategory(category);
+    }
+
+    @GetMapping("/monthly/{year}/{month}")
+    public List<Expense> getByMonth(@PathVariable int year, @PathVariable int month) {
+        return expenseService.findByYearAndMonth(year, month);
+    }
+
     @PostMapping
     public Expense create(@RequestBody Expense expense){
         return expenseService.create(expense);
@@ -35,4 +45,5 @@ public class ExpenseController {
     public void delete(@PathVariable Long id){
         expenseService.delete(id);
     }
+
 }

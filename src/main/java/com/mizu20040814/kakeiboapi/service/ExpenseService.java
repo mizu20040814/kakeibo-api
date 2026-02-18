@@ -61,4 +61,12 @@ public class ExpenseService {
         expenseRepository.deleteById(id);
     }
 
+    public List<Expense> findByCategory(String category){
+        return expenseRepository.findByCategory(category);
+    }
+
+    public List<Expense> findByYearAndMonth(int year, int month){
+        return expenseRepository.findByYearAndMonth(year,month);
+    }
+
 }
