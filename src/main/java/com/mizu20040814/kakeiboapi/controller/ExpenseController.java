@@ -25,4 +25,14 @@ public class ExpenseController {
     public Expense create(@RequestBody Expense expense){
         return expenseService.create(expense);
     }
+
+    @PutMapping("/{id}")
+    public Expense update(@PathVariable Long id, @RequestBody Expense expense){
+        return expenseService.update(id,expense);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        expenseService.delete(id);
+    }
 }

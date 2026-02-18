@@ -32,4 +32,33 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
+    public Expense update(Long id,Expense expense){
+        Expense existing = expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("指定されたIDの支出が見つかりません: " + id));
+
+        if(expense.getAmount() == null || expense.getAmount() <= 0){
+            throw new IllegalArgumentException("金額は1円以上で入力してください");
+        }
+        if (expense.getCategory() == null || expense.getCategory().isBlank()){
+            throw new IllegalArgumentException("カテゴリは必須です");
+        }
+        if(expense.getDate() == null){
+            throw new IllegalArgumentException("日付は必須です");
+        }
+
+        existing.setDate(expense.getDate());
+        existing.setAmount(expense.getAmount());
+        existing.setMemo(expense.getMemo());
+        existing.setCategory(expense.getCategory());
+
+        return expenseRepository.save(existing);
+    }
+
+    public void delete(Long id){
+        if(!expenseRepository.existsById(id)){
+            throw new IllegalArgumentException("指定されたIDの支出が見つかりません: " + id);
+        }
+        expenseRepository.deleteById(id);
+    }
+
 }
