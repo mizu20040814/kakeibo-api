@@ -21,6 +21,7 @@ public class ExpenseService {
     }
 
     public Expense create(ExpenseRequest request) {
+        validateRequest(request);
         Expense expense = new Expense();
         expense.setDate(request.getDate());
         expense.setAmount(request.getAmount());
@@ -32,6 +33,7 @@ public class ExpenseService {
     public Expense update(Long id, ExpenseRequest request) {
         Expense existing = expenseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("指定されたIDの支出が見つかりません: " + id));
+        validateRequest(request);
         existing.setDate(request.getDate());
         existing.setAmount(request.getAmount());
         existing.setCategory(request.getCategory());
@@ -59,4 +61,15 @@ public class ExpenseService {
         return expenseRepository.findByYearAndMonth(year,month);
     }
 
+    private void validateRequest(ExpenseRequest request) {
+        if (request.getAmount() == null || request.getAmount() <= 0) {
+            throw new IllegalArgumentException("金額は1円以上で入力してください");
+        }
+        if (request.getCategory() == null || request.getCategory().isBlank()) {
+            throw new IllegalArgumentException("カテゴリは必須です");
+        }
+        if (request.getDate() == null) {
+            throw new IllegalArgumentException("日付は必須です");
+        }
+    }
 }
