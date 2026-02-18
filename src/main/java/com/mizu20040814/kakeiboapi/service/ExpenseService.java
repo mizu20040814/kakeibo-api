@@ -61,6 +61,11 @@ public class ExpenseService {
         expenseRepository.deleteById(id);
     }
 
+    public Expense findById(Long id){
+        return expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("指定されたIDの支出が見つかりません: " + id));
+    }
+
     public List<Expense> findByCategory(String category){
         return expenseRepository.findByCategory(category);
     }

@@ -21,6 +21,11 @@ public class ExpenseController {
         return expenseService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Expense getById(@PathVariable Long id){
+        return expenseService.findById(id);
+    }
+
     @GetMapping("/category/{category}")
     public List<Expense> getByCategory(@PathVariable String category) {
         return expenseService.findByCategory(category);
