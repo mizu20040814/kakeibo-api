@@ -1,6 +1,7 @@
 package com.mizu20040814.kakeiboapi.controller;
 
-import com.mizu20040814.kakeiboapi.entity.Expense;
+import com.mizu20040814.kakeiboapi.dto.ExpenseRequest;
+import com.mizu20040814.kakeiboapi.dto.ExpenseResponse;
 import com.mizu20040814.kakeiboapi.service.ExpenseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,43 +13,48 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
 
-    public ExpenseController(ExpenseService expenseService){
+    public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
 
     @GetMapping
-    public List<Expense> getAll(){
-        return expenseService.findAll();
+    public List<ExpenseResponse> getAll() {
+        return expenseService.findAll().stream()
+                .map(ExpenseResponse::from)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Expense getById(@PathVariable Long id){
-        return expenseService.findById(id);
+    public ExpenseResponse getById(@PathVariable Long id) {
+        return ExpenseResponse.from(expenseService.findById(id));
     }
 
     @GetMapping("/category/{category}")
-    public List<Expense> getByCategory(@PathVariable String category) {
-        return expenseService.findByCategory(category);
+    public List<ExpenseResponse> getByCategory(@PathVariable String category) {
+        return expenseService.findByCategory(category).stream()
+                .map(ExpenseResponse::from)
+                .toList();
     }
 
     @GetMapping("/monthly/{year}/{month}")
-    public List<Expense> getByMonth(@PathVariable int year, @PathVariable int month) {
-        return expenseService.findByYearAndMonth(year, month);
+    public List<ExpenseResponse> getByMonth(@PathVariable int year, @PathVariable int month) {
+        return expenseService.findByYearAndMonth(year, month).stream()
+                .map(ExpenseResponse::from)
+                .toList();
     }
 
     @PostMapping
-    public Expense create(@RequestBody Expense expense){
-        return expenseService.create(expense);
+    public ExpenseResponse create(@RequestBody ExpenseRequest request) {
+        return ExpenseResponse.from(expenseService.create(request));
     }
 
     @PutMapping("/{id}")
-    public Expense update(@PathVariable Long id, @RequestBody Expense expense){
-        return expenseService.update(id,expense);
+    public ExpenseResponse update(@PathVariable Long id, @RequestBody ExpenseRequest request) {
+        return ExpenseResponse.from(expenseService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         expenseService.delete(id);
     }
-
 }
