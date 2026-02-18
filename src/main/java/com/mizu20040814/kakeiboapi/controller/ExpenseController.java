@@ -3,6 +3,7 @@ package com.mizu20040814.kakeiboapi.controller;
 import com.mizu20040814.kakeiboapi.dto.ExpenseRequest;
 import com.mizu20040814.kakeiboapi.dto.ExpenseResponse;
 import com.mizu20040814.kakeiboapi.service.ExpenseService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,12 +45,12 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ExpenseResponse create(@RequestBody ExpenseRequest request) {
+    public ExpenseResponse create(@Valid @RequestBody ExpenseRequest request) {
         return ExpenseResponse.from(expenseService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ExpenseResponse update(@PathVariable Long id, @RequestBody ExpenseRequest request) {
+    public ExpenseResponse update(@PathVariable Long id, @Valid @RequestBody ExpenseRequest request) {
         return ExpenseResponse.from(expenseService.update(id, request));
     }
 
