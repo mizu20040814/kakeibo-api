@@ -19,20 +19,34 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf -> csrf.disable()))
+                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/expenses/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/expenses/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT,"/api/expenses/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE,"/api/expenses/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/expenses/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/expenses/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/expenses/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/expenses/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
 
         return http.build();
+    }
+
+    @Bean
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        var config = new org.springframework.web.cors.CorsConfiguration();
+        config.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
+        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedHeaders(java.util.List.of("*"));
+        config.setAllowCredentials(true);
+
+        var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
