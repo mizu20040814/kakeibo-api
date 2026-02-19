@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: kakeibo-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: kakeibo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      LANG: C.UTF-8
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
